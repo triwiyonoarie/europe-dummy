@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:secure-property-placeholder="http://www.mulesoft.org/schema/mule/secure-property-placeholder" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/secure-property-placeholder http://www.mulesoft.org/schema/mule/secure-property-placeholder/current/mule-secure-property-placeholder.xsd">
+    <spring:beans>
+        <spring:import resource="${mule.env.spring.properties.folder}/application-context.xml"/>
+    </spring:beans>
+    <http:request-config name="HTTPS_SQL_Request_Configuration" host="${http.sql.api.host}" port="${http.sql.api.port}" basePath="${http.sql.api.base.path}" doc:name="HTTP Request Configuration" connectionIdleTimeout="${http.sql.api.connection.timeout}" responseTimeout="${http.sql.api.response.timeout}" protocol="HTTPS"/>
+    <http:request-config name="HTTPS_SAP_Request_Configuration" host="${http.sap.api.host}" port="${http.sap.api.port}" basePath="${http.sap.api.base.path}" doc:name="HTTP Request Configuration" connectionIdleTimeout="${http.sap.api.connection.timeout}" responseTimeout="${http.sap.api.response.timeout}" protocol="HTTPS"/>
+    <jms:activemq-connector name="Active_MQ" brokerURL="${jms.broker.url}" validateConnections="true" doc:name="Active MQ"/>
+    <secure-property-placeholder:config name="Secure_Property_Placeholder" encryptionAlgorithm="Blowfish" key="${mule-europe-interface-plannedtime-sql-sap.secure.key}" location="${mule.env.secure.properties.folder}/mule-europe-interface-plannedtime-sql-sap-secure.properties" doc:name="Secure Property Placeholder" ignoreUnresolvablePlaceholders="true"/>
+	<context:property-placeholder location="${mule.env.application.properties.folder}/mule-europe-interface-plannedtime-sql-sap.properties"/>
+    <configuration doc:name="String Util">
+      <expression-language>
+          <global-functions>
+              def subString(value,start,end) {
+                  return org.apache.commons.lang3.StringUtils.substring(value,start,end);
+              }
+          </global-functions>
+      </expression-language>
+  </configuration>
+</mule>

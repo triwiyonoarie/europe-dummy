@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <sub-flow name="call-sap-api-sub-flow">
+        <http:request config-ref="HTTPS_SAP_Request_Configuration" path="${http.sap.api.path}" method="${http.sap.api.method}" doc:name="Invoke SAP API">
+            <http:request-builder>
+                <http:header headerName="client_id" value="${sapapi.client.id}"/>
+                <http:header headerName="client_secret" value="${sapapi.client.secret}"/>
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <json:json-to-xml-transformer  doc:name="JSON to XML"/>
+    </sub-flow>
+</mule>
